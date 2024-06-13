@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{plantilla/UITemplate :: cabecera}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuarios</title>
+
+    <style>
+        i {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <!-- Botón para cerrar sesión -->
+        <div class="row">
+            <div class="col-md-12" style="margin-left: 1150px; position: fixed; margin-top: 50px;">
+                <p class="mb-1 h5" th:text="${session.NOMBRE}"></p>
+                <p class="mb-0" th:text="${session.USU.rol.descripcion}"></p>
+                <form method="post" th:action="@{/logout}" style="margin-top: 30px;">
+                    <input type="submit" id="cerrarsesion" value="Cerrar sesión">
+                </form>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 50px;">
+            <!-- Parte de la tabla -->
+            <button class="btn btn-primary" onclick="abrirModal()" style="width: 30%;margin-left: 50px;">Nuevo
+                Prestamista</button>
+            <div class="col-md-9">
+                <table class="table table-hover" id="myTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Local</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="data:${lista}">
+                            <td th:text="${data.idPrestamista}"></td>
+                            <td th:text="${data.usuario.nombres}"></td>
+                            <td th:text="${data.usuario.telefono}"></td>
+                            <td th:text="${data.usuario.correo}"></td>
+                            <!-- <td th:text="${data.localComercial.descripcion}"></td> -->
+                            <!-- Botón para abrir el modal con datos -->
+                            <td class="text-center">
+                                <i class="fa-solid fa-pen-to-square fa-lg me-3" style="color: #74C0FC;"
+                                    onclick="abrirModalEditar(this)"
+                                    th:attr="data-id=${data.idPrestamista}, data-direccion=${data.usuario.direccion}, data-dni=${data.usuario.dni}, data-usuario=${data.usuario.usuario}, data-nombres=${data.usuario.nombres}, data-apellidos=${data.usuario.apellidos}, data-correo=${data.usuario.correo}, data-telefono=${data.usuario.telefono}, data-local=${data.localComercial.idLocalComercial}"></i>
+                                <!-- Botón para eliminar con confirmación -->
+                                <i class="fa-solid fa-trash fa-lg ms-2" style="color: #ff0000;"
+                                    onclick="confirmarEliminar(this)" th:attr="data-id=${data.idPrestamista}"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar y agregar -->
+    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Gestion Prestamistas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Aquí se cargarán los datos dinámicamente -->
+                <div class="modal-body">
+                    <form th:action="@{/jefe/guardar}" method="post">
+                        <input type="hidden" value="0" name="codigo" id="codigo">
+                        <div class="mb-3">
+                            <label for="nombres" class="form-label">Nombres</label>
+                            <input type="text" class="form-control" id="nombres" name="nombres">
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellidos" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="apellidos" name="apellidos">
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="usuario" name="usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="dni" name="dni">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono">
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Direccion</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion">
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo</label>
+                            <input type="email" class="form-control" id="correo" name="correo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="local" class="form-label">Local</label>
+                            <select class="form-select" id="local" name="local">
+                                <option th:each="local : ${locales}" th:text="${local.descripcion}"
+                                    th:value="${local.idLocalComercial}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para abrir el modal de edición -->
+    <script>
+        function abrirModalEditar(elemento) {
+            var id = $(elemento).data('id');
+            var nombres = $(elemento).data('nombres');
+            var apellidos = $(elemento).data('apellidos');
+            var correo = $(elemento).data('correo');
+            var telefono = $(elemento).data('telefono');
+            var usuario = $(elemento).data('usuario');
+            var direccion = $(elemento).data('direccion');
+            var dni = $(elemento).data('dni');
+            var local = $(elemento).data('local');
+
+            $('#codigo').val(id);
+            $('#nombres').val(nombres);
+            $('#apellidos').val(apellidos);
+            $('#correo').val(correo);
+            $('#telefono').val(telefono);
+            $('#direccion').val(direccion);
+            $('#usuario').val(usuario);
+            $('#dni').val(dni);
+            $('#local').value = local;
+
+            $('#editarModal').modal('show');
+        }
+
+        function abrirModal() {
+            $('#codigo').val('0');
+            $('#nombres').val('');
+            $('#apellidos').val('');
+            $('#correo').val('');
+            $('#telefono').val('');
+            $('#direccion').val('');
+            $('#usuario').val('');
+            $('#dni').val('');
+            $('#local').value = 1;
+
+            $('#editarModal').modal('show');
+        }
+    </script>
+
+    <!-- Script para confirmar la eliminación -->
+    <script>
+        function confirmarEliminar(elemento) {
+            var id = $(elemento).data('id');
+            if (confirm("¿Estás seguro de que quieres eliminar este elemento?")) {
+                window.location.href = "/jefe/eliminarPorId?idEliminar=" + id;
+            }
+        }
+    </script>
+
+    <!-- Template -->
+    <div th:insert="plantilla/UITemplate :: javascript"></div>
+
+</body>
+
+</html>

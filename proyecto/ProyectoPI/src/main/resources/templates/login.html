@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background:  rgb(5, 15, 22);
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .login-container {
+            background: rgb(112, 119, 186,0);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+        }
+
+        .login-container input {
+            width: 80%;
+            color: white;
+            padding: 20px;
+            margin: 10px 0;
+            background-color: rgb(34, 57, 77);
+            border: none;
+            border-radius: 5px;
+        }
+
+        .login-container button {
+            background-color: rgb(9, 72, 157);
+            color: white;
+            font-size: 20px;
+            width: 91%;
+            padding: 20px 30px;
+            border: none;
+            margin-top: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-container button:active {
+            background-color: rgb(3, 28, 61);
+        }
+        input:focus {
+    		border: 1px solid rgb(195, 195, 195,0.7); 
+    		outline: none; 
+        }
+		input::placeholder {
+   			color: rgb(195, 195, 195,0.85);
+		}
+		.alert-danger{
+			margin-left: 5%;
+			padding: 10px;
+			border: 2px solid rgb(198, 9, 9);
+			color: rgb(198, 9, 9);
+			background-color: rgb(237, 112, 112,0.3);
+			width: 84%;
+		}
+		.alert-success{
+			margin-left: 5%;
+			padding: 10px;
+			border: 2px solid rgb(80, 203, 27);
+			color: rgb(80, 203, 27);
+			background-color: rgb(155, 237, 120,0.3);
+			width: 84%;
+		}
+    </style>
+</head>
+<body>
+    <div class="login-container" style="margin-top: 80px;">
+        <h2 style="margin-top: 20px;">Login</h2>
+        <form method="post" th:action="@{/session/login}">
+            <input type="text" id="username" name="username" placeholder="Usuario" required>
+
+            <input type="password" id="password" name="password" placeholder="Contraseña" required>
+            <div class="alert-danger" th:if="${param.error}">Clave o usuario incorrectos</div>
+		    <div class="alert-success" th:if="${param.logout}">Sesión terminada</div>
+            <button type="submit">Continuar</button>
+        </form>
+        <button class="center-button" onclick="window.location.href='/session/registro'">Registro</button>
+    </div>
+</body>
+</html>

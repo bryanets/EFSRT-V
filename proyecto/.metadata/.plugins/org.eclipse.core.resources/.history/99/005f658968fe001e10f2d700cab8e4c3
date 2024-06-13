@@ -1,0 +1,25 @@
+package com.gestion.prestamo.entity;
+
+import java.util.List;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Entity
+@Table(name = "inversionista")
+public class Inversionista {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idinversionista")
+    private Integer idInversionista;
+
+    @OneToOne
+    @JoinColumn(name = "idusuario")
+    private Usuario usuario;
+
+    @OneToMany(mappedBy = "inversionista")
+    private List<JefePrestamista> jefePrestamistas;
+}

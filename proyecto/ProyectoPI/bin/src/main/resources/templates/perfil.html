@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head th:insert="plantilla/UITemplate :: cabecera">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuarios</title>
+
+    <style>
+        .table {
+            max-width: 60%;
+        }
+
+        .table td {
+            padding-bottom: 30px;
+        }
+
+        .container-fluid {
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <h3>Inversionista</h3>
+        <table class="table table-borderless mt-3">
+            <tbody>
+                <tr>
+                    <td>Nombre</td>
+                    <td>Martin Vizcarra</td>
+                </tr>
+                <tr>
+                    <td>DNI.</td>
+                    <td>46184698</td>
+                </tr>
+                <tr>
+                    <td>Dirección</td>
+                    <td>Av. Izaguirre s/n - Independencia</td>
+                </tr>
+                <tr>
+                    <td>Teléfono</td>
+                    <td>988876517</td>
+                </tr>
+                <tr>
+                    <td>Correo</td>
+                    <td>vizcarra&#64;gotabank.com</td>
+                </tr>
+                <tr>
+                    <td>Fecha de nacimiento</td>
+                    <td>14 de setiembre de 1975</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Template -->
+    <div th:insert="plantilla/UITemplate :: javascript"></div>
+
+</body>
+
+</html>

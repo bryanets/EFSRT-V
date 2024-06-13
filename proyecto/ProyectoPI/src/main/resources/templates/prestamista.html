@@ -1,0 +1,1140 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head th:insert="~{plantilla/UITemplate :: cabecera}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuarios</title>
+</head>
+
+<body>
+    <!-- Sidev -->
+    <div class="contenedor">
+        <div class="fila">
+            <div class="col-3 mt-2 ms-2">
+                <div class="container-sidenav">
+                    <div class="sidenav">
+                        <div class="text-center mb-5">
+                            <p class="mb-1 h5" th:text="${session.NOMBRE}"></p>
+                            <p class="mb-0" th:text="${session.USU.rol.descripcion}"></p>
+                            <form method="post" th:action="@{/logout}">
+                                <input class="btn btn-danger btn-sm mt-3" type="submit" id="cerrarsesion"
+                                    value="Cerrar sesión">
+                            </form>
+                        </div>
+                        <ul>
+                            <li><i class="fa-solid fa-house fa-sm me-2"></i><span class="me-5" id="btnMisdatos">
+                                    Mis datos</span></li>
+                            <li><i class="fa-solid fa-calendar-check fa-sm me-2"></i><span class="me-5"
+                                    id="btnTrabajadores">
+                                    Prestatarios</span></li>
+                            <li><i class="fa-solid fa-bell fa-sm me-2"></i><span class="me-5" id="btnSolicitudes">
+                                    Solicitudes</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 mt-4" id="miDiv">
+                <div class="container" id="perfil">
+                    <div class="container-fluid">
+                        <h3>Prestamista</h3>
+                        <table class="table table-borderless mt-3">
+                            <tbody>
+                                <tr>
+                                    <td>Nombre</td>
+                                    <td th:text="${session.USU.nombres}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Apellidos</td>
+                                    <td th:text="${session.USU.apellidos}"></td>
+                                </tr>
+                                <tr>
+                                    <td>DNI.</td>
+                                    <td th:text="${session.USU.dni}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Dirección</td>
+                                    <td th:text="${session.USU.direccion}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Teléfono</td>
+                                    <td th:text="${session.USU.telefono}"></td>
+                                </tr>
+                                <tr>
+                                    <td>Correo</td>
+                                    <td th:text="${session.USU.correo}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="container" id="trabajadores">
+                    <div class="container">
+                        <h3 class="mb-1">Prestamista</h3>
+                        <h5 class="mb-4" th:text="${session.USU.prestamista.localComercial.descripcion}"></h5>
+                        <hr>
+                        <button class="btn btn-primary btn-md mb-3" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop" id="btnNuevo">Nuevo<i
+                                class="fa-solid fa-user-plus fa-sm ms-2" style="color: #ffffff;"></i></button>
+                        <table class="table table-hover" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Usuario</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Teléfono</th>
+                                    <th scope="col">Correo</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="data:${listaPrestatarios}">
+                                    <td th:text="${data.idPrestatario}"></td>
+                                    <td th:text="${data.usuario.usuario}"></td>
+                                    <td th:text="${data.usuario.nombres}"></td>
+                                    <td th:text="${data.usuario.telefono}"></td>
+                                    <td th:text="${data.usuario.correo}"></td>
+                                    <!-- Button trigger modal -->
+                                    <td class="text-center"><i class="fa-solid fa-money-bill-1 fa-lg me-3"
+                                            id="btnDetalle" style="color: #1ad59d;" data-bs-toggle="modal"
+                                            data-bs-target="#modalDetalle"></i>
+                                        <i class="fa-solid fa-pen-to-square fa-lg me-3" style="color: #74C0FC;"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i><i
+                                            class="fa-solid fa-trash fa-lg ms-2" style="color: #ff0000;"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- Modal -->
+                        <div class="modal fade modal-xl" id="staticBackdrop" data-bs-backdrop="static"
+                            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Datos del trabajador</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Cuerpo -->
+
+                                        <form method="post" class="row g-3" th:action="@{/prestamista/guardar}"
+                                            id="prestamista">
+                                            <div class="col-md-4">
+                                                <label for="codigo" class="form-label">Codigo</label>
+                                                <input type="text" class="form-control" id="codigo" name="codigo"
+                                                    value="" required readonly>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="nombre" class="form-label">Nombre</label>
+                                                <input type="text" class="form-control required" id="nombres"
+                                                    name="nombres" value="" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="apellidos" class="form-label">Apellidos</label>
+                                                <input type="text" class="form-control required" id="apellidos"
+                                                    name="apellidos" value="" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="correo" class="form-label">Correo</label>
+                                                <div class="input-group has-validation">
+                                                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                                    <input type="email" class="form-control" id="correo" name="correo"
+                                                        aria-describedby="inputGroupPrepend" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="usuario" class="form-label">Usuario</label>
+                                                <input type="text" class="form-control" id="usuario" name="usuario"
+                                                    required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="dni" class="form-label">Dni</label>
+                                                <input type="number" class="form-control" id="dni" name="dni" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="direccion" class="form-label">Dirección</label>
+                                                <input type="text" class="form-control required" id="direccion"
+                                                    name="direccion" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="telefono" class="form-label">Teléfono</label>
+                                                <input type="number" class="form-control" id="telefono" name="telefono"
+                                                    value="" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="password" class="form-label">Restablecer contraseña</label>
+                                                <button class="btn form-control" id="password"
+                                                    style="background-color: rgb(255, 252, 212);" disabled>Restablecer<i
+                                                        class="fa-solid fa-arrows-rotate fa-sm ms-2"
+                                                        style="color: #887220;"></i></button>
+                                            </div>
+                                            <hr>
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-light border-success me-3" type="button"
+                                                    style="background-color: #f6fffb;" id="btnGuardar">Guardar</button>
+                                                <button type="button" class="btn btn-light border-danger"
+                                                    data-bs-dismiss="modal" id="btnCancelar">Cancelar</button>
+                                            </div>
+                                            <!-- Fin Cuerpo -->
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin modal -->
+                        <!-- MODAL -->
+                        <div class="modal fade modal-xl" id="modalDetalle" data-bs-backdrop="static"
+                            data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Pagos</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Acordion -->
+                                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
+                                                        aria-expanded="false" aria-controls="flush-collapseOne">
+                                                        Accordion Item #1
+                                                    </button>
+                                                </h2>
+                                                <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                                    data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">Placeholder content for this accordion,
+                                                        which is intended to demonstrate the
+                                                        <code>.accordion-flush</code> class. This is the first item's
+                                                        accordion body.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo"
+                                                        aria-expanded="false" aria-controls="flush-collapseTwo">
+                                                        Accordion Item #2
+                                                    </button>
+                                                </h2>
+                                                <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                                                    data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">Placeholder content for this accordion,
+                                                        which is intended to demonstrate the
+                                                        <code>.accordion-flush</code> class. This is the second item's
+                                                        accordion body. Let's imagine this being filled with some actual
+                                                        content.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#flush-collapseThree"
+                                                        aria-expanded="false" aria-controls="flush-collapseThree">
+                                                        Accordion Item #3
+                                                    </button>
+                                                </h2>
+                                                <div id="flush-collapseThree" class="accordion-collapse collapse"
+                                                    data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">Placeholder content for this accordion,
+                                                        which is intended to demonstrate the
+                                                        <code>.accordion-flush</code> class. This is the third item's
+                                                        accordion body. Nothing more exciting happening here in terms of
+                                                        content, but just filling up the space to make it look, at least
+                                                        at first glance, a bit more representative of how this would
+                                                        look in a real-world application.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Cuerpo -->
+
+                                        <!--                                         <table class="table table-hover" id="tablaPagos">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Cuota</th>
+                                                    <th scope="col">Fecha de pago</th>
+                                                    <th scope="col">Fecha pagada</th>
+                                                    <th scope="col">Monto</th>
+                                                    <th scope="col">Estado</th>
+                                                    <th scope="col"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- FIN MODAL -->
+                        </div>
+                    </div>
+                </div>
+                <div class="container" id="solicitudes">
+                    <div class="row col-12">
+                        <div class="col-6">
+                            <label for="prestatario" class="form-label">Prestatario</label>
+                            <input type="text" class="form-control" id="txtPrestatario" name="prestatario" value="">
+                        </div>
+                        <div class="col-6 d-flex align-items-end">
+                            <button class="btn btn-primary" id="btnFiltrar"> Filtrar</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <h5>Fecha de solicitud</h5>
+                    <div class="row col-12 mb-4">
+                        <div class="col-6">
+                            <label for="desde" class="form-label">Desde</label>
+                            <input type="date" class="form-control" id="desde" name="desde" value="">
+                        </div>
+                        <div class="col-6">
+                            <label for="hasta" class="form-label">Hasta</label>
+                            <input type="date" class="form-control" id="hasta" name="hasta"
+                                th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" value="">
+                        </div>
+                    </div>
+                    <hr>
+                    <table class="table table-custom mt-3" id="tablaPrestatarios">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">#Solicitud</th>
+                                <th scope="col" class="text-center">#Usuario</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col" class="text-center">Monto</th>
+                                <th scope="col" class="text-center">Cuota</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <!-- Button trigger modal -->
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- MODAL -->
+                    <div class="modal fade modal-xl" id="staticBackdropSolicitud" data-bs-backdrop="static"
+                        data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Solicitud</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Cuerpo -->
+
+                                    <form method="post" class="row g-3" th:action="@{/prestamista/registrarPrestamo}"
+                                        id="formSolicitud">
+                                        <div class="col-md-4" hidden>
+                                            <label for="idSolicitud" class="form-label">Solicitud</label>
+                                            <input type="text" class="form-control" id="idSolicitud" name="solicitud"
+                                                value="" required readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="idPrestatario" class="form-label">Prestatario</label>
+                                            <input type="text" class="form-control" id="idPrestatario"
+                                                name="prestatario" value="" required readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="idPrestamista" class="form-label">Prestamista</label>
+                                            <input type="text" class="form-control required" id="idPrestamista"
+                                                name="prestamista" value="" required readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="idMonto" class="form-label">Monto</label>
+                                            <input type="text" class="form-control required" id="idMonto" name="monto"
+                                                value="" required readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="idInteres" class="form-label">Interes</label>
+                                            <input type="text" class="form-control required" id="idInteres"
+                                                name="interes" value="" required readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="idTaza" class="form-label">Taza</label>
+                                            <input type="text" class="form-control" id="idTaza" name="taza" required
+                                                readonly>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="idModalidad" class="form-label">Modalidad</label>
+                                            <select class="form-select" id="idModalidad" name="modalidad">
+                                                <option selected disabled>Seleccione...</option>
+                                                <option value=1>Diario</option>
+                                                <option value=2>Yape</option>
+                                            </select>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-end">
+                                            <button class="btn btn-light border-success me-3" type="button"
+                                                style="background-color: #f6fffb;"
+                                                id="btnGuardarSolicitud">Guardar</button>
+                                            <button type="button" class="btn btn-light border-danger"
+                                                data-bs-dismiss="modal" id="btnRechazarSolicitud">Rechazar</button>
+                                        </div>
+                                        <!-- Fin Cuerpo -->
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FIN MODAL -->
+                </div>
+            </div>
+        </div>
+        <!-- fin sidev -->
+
+        <!-- Template -->
+        <div th:insert="~{plantilla/UITemplate :: javascript}"></div>
+        <!--  -->
+
+        <script th:inline="javascript">
+            var nombreUsuario = /*[[${session.NOMBRE}]]*/ '';
+        </script>
+
+        <script>
+
+            /* Guardar nuevo prestatario */
+            $(document).ready(function () {
+                // Validación del formulario al enviar
+                $("#btnGuardar").click(function (event) {
+                    event.preventDefault();
+                    $('#prestamista .invalid-feedback').remove();
+
+                    var camposRequeridos = $("#prestamista .required");
+                    var camposValidos = true;
+                    var promesas = [];
+
+                    // Si el código es diferente de 0, se está actualizando un registro existente
+                    if ($('#codigo').val() !== '0') {
+                        obtenerUsuarioActual($('#codigo').val())
+                            .then(function (usuarioActual) {
+                                console.log(usuarioActual);
+
+                                if ($('#usuario').val() !== usuarioActual.usuario) {
+                                    promesas.push(validarUsuario($('#usuario').val()));
+                                }
+                                if ($('#correo').val() !== usuarioActual.correo) {
+                                    promesas.push(validarCorreo($('#correo').val()));
+                                }
+                                if ($('#dni').val() !== usuarioActual.dni) {
+                                    promesas.push(validarDni($('#dni').val()));
+                                }
+                                if ($('#telefono').val() !== usuarioActual.telefono) {
+                                    promesas.push(validarTelefono($('#telefono').val()));
+                                }
+
+                                Promise.all(promesas).then(function (resultados) {
+                                    // Verificar si algún resultado es false
+                                    camposValidos = resultados.every(function (resultado) {
+                                        return resultado;
+                                    });
+
+                                    camposRequeridos.each(function () {
+                                        if ($(this).val() === "") {
+                                            camposValidos = false;
+                                            $(this).addClass("is-invalid");
+                                        } else {
+                                            $(this).removeClass("is-invalid");
+                                        }
+                                    });
+
+                                    console.log('Todos los campos válidos:', camposValidos);
+
+                                    // Si todos los campos son válidos, enviar el formulario
+                                    if (camposValidos) {
+                                        $("#prestamista").submit();
+                                    }
+                                });
+                            })
+                            .catch(function (error) {
+                                console.error('Error al obtener el usuario actual:', error);
+                            });
+                    } else {
+                        // Si el código es 0, se está creando un nuevo registro
+                        promesas.push(validarUsuario($('#usuario').val()));
+                        promesas.push(validarCorreo($('#correo').val()));
+                        promesas.push(validarDni($('#dni').val()));
+                        promesas.push(validarTelefono($('#telefono').val()));
+
+                        Promise.all(promesas).then(function (resultados) {
+                            // Verificar si algún resultado es false
+                            camposValidos = resultados.every(function (resultado) {
+                                return resultado;
+                            });
+
+                            camposRequeridos.each(function () {
+                                if ($(this).val() === "") {
+                                    camposValidos = false;
+                                    $(this).addClass("is-invalid");
+                                } else {
+                                    $(this).removeClass("is-invalid");
+                                }
+                            });
+
+                            console.log('Todos los campos válidos:', camposValidos);
+
+                            // Si todos los campos son válidos, enviar el formulario
+                            if (camposValidos) {
+                                $("#prestamista").submit();
+                            }
+                        });
+                    }
+                });
+            });
+
+            $(document).ready(function () {
+
+                $('#myTable').dataTable({
+                    ordering: false,
+                    "language": {
+                        "search": "Buscar:",
+                        "lengthMenu": "Mostrar _MENU_ entradas",
+                        "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                        "paginate": {
+                            "previous": "Anterior",
+                            "next": "Siguiente"
+                        }
+                    }
+                });
+
+                $('#tablaPrestatarios tbody').empty();
+                $('#btnFiltrar').trigger('click');
+
+                $('#perfil').hide();
+                $('#solicitudes').hide();
+                $('#trabajadores').show();
+
+                $('#btnTrabajadores').click(function () {
+                    $('#perfil').hide();
+                    $('#solicitudes').hide();
+                    $('#trabajadores').show();
+                });
+
+                $('#btnMisdatos').click(function () {
+                    $('#perfil').show();
+                    $('#solicitudes').hide();
+                    $('#trabajadores').hide();
+                });
+
+                $('#btnSolicitudes').click(function () {
+                    $('#perfil').hide();
+                    $('#solicitudes').show();
+                    $('#trabajadores').hide();
+                });
+
+                $('#btnCancelar').click(function () {
+                    $('#prestamista')[0].reset();
+                    $('#prestamista').removeClass('was-validated');
+                });
+
+                $('#btnNuevo').click(function () {
+                    resetForm();
+                    $('#codigo').val(0);
+                });
+
+            });
+
+            /* Filtrar las solicitudes */
+            $('#btnFiltrar').click(function () {
+                let prestatario = $('#txtPrestatario').val();
+                let desde = $('#desde').val();
+                let hasta = $('#hasta').val();
+
+                if (prestatario === '' && desde === '' && hasta === '') {
+                    $.get('/prestamista/solicitudes', function (res) {
+
+                        // Limpiar la tabla antes de llenarla con nuevos datos
+                        $('#tablaPrestatarios tbody').empty();
+                        res.forEach(function (solicitud, index) {
+                            let row = `
+                <tr>
+                    <td class="text-center">${solicitud.idSolicitud}</td>
+                    <td class="text-center">${solicitud.usuario.idUsuario}</td>
+                    <td>${solicitud.usuario.nombres} ${solicitud.usuario.apellidos}</td>
+                    <td class="text-center">${solicitud.monto.monto}</td>
+                    <td class="text-center">${solicitud.monto.dias}</td>
+                    <td>${solicitud.estado}</td>
+                    <td class="text-center"><i class="fa-solid fa-eye fa-lg" style="color: #1ad59d;" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdropSolicitud" data-interes="${solicitud.monto.montoInteres}"></i></td>
+                </tr>
+            `;
+                            $('#tablaPrestatarios tbody').append(row);
+                        });
+                        colorearFilas();
+                    });
+                }
+
+                if (prestatario !== '') {
+                    if (desde === '' && hasta === '') {
+                        $.get('/prestamista/solicitudesXUsuario?apellidos=' + prestatario, function (res) {
+                            // Limpiar la tabla antes de llenarla con nuevos datos
+                            $('#tablaPrestatarios tbody').empty();
+                            res.forEach(function (solicitud, index) {
+
+                                let row = `
+                <tr>
+                    <td class="text-center">${solicitud.idSolicitud}</td>
+                    <td class="text-center">${solicitud.usuario.idUsuario}</td>
+                    <td>${solicitud.usuario.nombres} ${solicitud.usuario.apellidos}</td>
+                    <td class="text-center">${solicitud.monto.monto}</td>
+                    <td class="text-center">${solicitud.monto.dias}</td>
+                    <td>${solicitud.estado}</td>
+                    <td class="text-center"><i class="fa-solid fa-eye fa-lg" style="color: #1ad59d;" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdropSolicitud" data-interes="${solicitud.monto.montoInteres}"></i></td>
+                </tr>
+            `;
+                                $('#tablaPrestatarios tbody').append(row);
+                            });
+                            colorearFilas();
+                        });
+
+                    } else {
+                        $.get('/prestamista/solicitudesXFecha', { apellidos: prestatario, desde: desde, hasta: hasta }, function (res) {
+
+                            // Limpiar la tabla antes de llenarla con nuevos datos
+                            $('#tablaPrestatarios tbody').empty();
+                            res.forEach(function (solicitud, index) {
+
+                                let row = `
+                <tr>
+                    <td class="text-center">${solicitud.idSolicitud}</td>
+                    <td class="text-center">${solicitud.usuario.idUsuario}</td>
+                    <td>${solicitud.usuario.nombres} ${solicitud.usuario.apellidos}</td>
+                    <td class="text-center">${solicitud.monto.monto}</td>
+                    <td class="text-center">${solicitud.monto.dias}</td>
+                    <td>${solicitud.estado}</td>
+                    <td class="text-center"><i class="fa-solid fa-eye fa-lg" style="color: #1ad59d;" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdropSolicitud" data-interes="${solicitud.monto.montoInteres}"></i></td>
+                </tr>
+            `;
+                                $('#tablaPrestatarios tbody').append(row);
+                            });
+                        });
+
+                    }
+                } else {
+                    if (desde !== '' && hasta !== '') {
+                        $.get('/prestamista/solicitudesXFechaSinPrestatario', { desde: desde, hasta: hasta }, function (res) {
+
+                            // Limpiar la tabla antes de llenarla con nuevos datos
+                            $('#tablaPrestatarios tbody').empty();
+                            res.forEach(function (solicitud, index) {
+
+                                let row = `
+                <tr>
+                    <td class="text-center">${solicitud.idSolicitud}</td>
+                    <td class="text-center">${solicitud.usuario.idUsuario}</td>
+                    <td>${solicitud.usuario.nombres} ${solicitud.usuario.apellidos}</td>
+                    <td class="text-center">${solicitud.monto.monto}</td>
+                    <td class="text-center">${solicitud.monto.dias}</td>
+                    <td>${solicitud.estado}</td>
+                    <td class="text-center"><i class="fa-solid fa-eye fa-lg" style="color: #1ad59d;" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdropSolicitud" data-interes="${solicitud.monto.montoInteres}"></i></td>
+                </tr>
+            `;
+                                $('#tablaPrestatarios tbody').append(row);
+                            });
+                            colorearFilas();
+                        });
+                    }
+                }
+            });
+
+
+            $('#dni').keypress(function (e) {
+                var dni = $(this).val();
+                var regexDNI = /^\d{0,7}$/; // Hasta 8 dígitos
+                if (!regexDNI.test(dni)) {
+                    e.preventDefault(); // Evitar que se ingrese más de 8 dígitos
+                }
+            });
+
+            $('#telefono').keypress(function (e) {
+                var telefono = $(this).val();
+                var regexTelefono = /^9\d{0,8}$/; // Inicia con 9 y tiene hasta 8 dígitos adicionales
+                var key = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+                if (!regexTelefono.test(telefono + key)) {
+                    e.preventDefault(); // Evitar que se ingrese otro valor
+                }
+            });
+
+            /* Aprobar o rechazar solicitudes */
+            $('#tablaPrestatarios tbody').on('click', 'tr td i.fa-eye', function () {
+                //resetForm();
+                var codigoSolicitud = $(this).closest('tr').find('td:first').text();
+                var codigoUsuario = $(this).closest('tr').find('td:first').next().text();
+                var prestatario = $(this).closest('tr').find('td:first').next().next().text();
+                var prestamista = nombreUsuario;
+                var monto = $(this).closest('tr').find('td:first').next().next().next().text();
+                let estado = $(this).closest('tr').find('td:first').next().next().next().next().next().text();
+                var interesTotal = parseFloat($(this).data('interes'));
+                var interes = (interesTotal - parseFloat(monto)).toFixed(2);
+                var taza = (((interesTotal - monto) / monto) * 100).toFixed(2);
+
+                // Limpiar la tabla antes de llenarla con nuevos datos
+                $('#idSolicitud').val(codigoSolicitud);
+                $('#idPrestatario').val(prestatario);
+                $('#idPrestamista').val(prestamista);
+                $('#idMonto').val(monto);
+                $('#idInteres').val(interes);
+                $('#idTaza').val(taza + '%');
+
+                if (estado == 'pendiente') {
+                    $('#btnGuardarSolicitud').click(function () {
+                        let valido;
+                        valido = validarModalidad();
+                        if (valido) {
+                            $("#formSolicitud").submit();
+                        }
+                    });
+
+                    $('#btnRechazarSolicitud').click(function () {
+                        var codigoSolicitudNum = parseInt(codigoSolicitud, 10);
+                        $.ajax({
+                            type: "GET",
+                            url: '/prestamista/rechazar?idSolicitud=' + codigoSolicitudNum,
+                            success: function () {
+                                location.reload();
+                            },
+                            error: function () {
+                                console.log("Error al rechazar la solicitud");
+                            }
+                        });
+                    });
+                } else {
+                    alertify.alert('Esta solicitud ya fue ' + estado, function () {
+                        $('#staticBackdropSolicitud').modal('hide');
+                    });
+                }
+            });
+
+            /* Editar */
+            $('#myTable tbody').on('click', 'tr td i.fa-pen-to-square', function () {
+                resetForm();
+                var codigo = $(this).closest('tr').find('td:first').text();
+                /* Llenando formulario de trabajador */
+                $.get('/prestamista/buscarPorId?idPrestatario=' + codigo, function (res) {
+                    // Limpiar la tabla antes de llenarla con nuevos datos
+                    $('#codigo').val(codigo);
+                    $('#nombres').val(res.usuario.nombres);
+                    $('#apellidos').val(res.usuario.apellidos);
+                    $('#correo').val(res.usuario.correo);
+                    $('#usuario').val(res.usuario.usuario);
+                    $('#dni').val(res.usuario.dni);
+                    $('#direccion').val(res.usuario.direccion);
+                    $('#telefono').val(res.usuario.telefono);
+                });
+            });
+
+
+            $(document).on('click', '#btnDetalle', function () {
+                let codigo = $(this).closest('tr').find('td:first').text();
+                $.get('/prestamista/buscarPorId?idPrestatario=' + codigo, function (res) {
+                    $('#accordionFlushExample').empty();
+                    res.prestamos.sort((a, b) => b.idPrestamo - a.idPrestamo); // Ordenar los préstamos por idPrestamo en forma descendente
+                    let contador = 0;
+                    res.prestamos.forEach(function (prestamo, indexPrestamo) {
+                        if (prestamo.detallePrestamo.length > 0) {
+                            contador++;
+                            let accordionItem = `
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#flush-collapse${indexPrestamo}" aria-expanded="false" aria-controls="flush-collapse${indexPrestamo}">
+                        Prestamo #${contador}
+                    </button>
+                </h2>
+                <div id="flush-collapse${indexPrestamo}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        <table class="table table-custom" id="tablaDetalles">
+                            <thead>
+                                <tr>          
+                                    <th scope="col" class="text-center">Cuota</th>
+                                    <th scope="col" class="text-center" style="display: none;">idDetalle</th>
+                                    <th scope="col" class="text-center">Fecha de Pago</th>
+                                    <th scope="col" class="text-center">Fecha Pagada</th>
+                                    <th scope="col" class="text-center">Monto</th>
+                                    <th scope="col" class="text-center">Estado</th>
+                                    <th scope="col" class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+        `;
+                            prestamo.detallePrestamo.forEach(function (detallePrestamo, indexDetalle) {
+                                let fechaPago = formatearFecha(detallePrestamo.fechaPago);
+                                let fechaPagada;
+                                var style = "style='pointer-events: none;  background-color: #f6ffeb; opacity: 0.5;'";
+                                if (detallePrestamo.fechaPagada != null) {
+                                    fechaPagada = formatearFecha(detallePrestamo.fechaPagada);
+                                } else {
+                                    fechaPagada = '-----';
+                                }
+
+                                if (detallePrestamo.estado === 'pagado') {
+                                    style = "style='pointer-events: none;  background-color: #f6ffeb; opacity: 0.5;'";
+                                } else {
+                                    style = "";
+                                }
+
+                                accordionItem += `
+                <tr ${style}>
+                    <td class="text-center">${indexDetalle + 1}</td>
+                    <td class="text-center" style="display: none;">${detallePrestamo.idDetalle}</td>
+                    <td class="text-center">${fechaPago}</td>
+                    <td class="text-center">${fechaPagada}</td>
+                    <td class="text-center">${detallePrestamo.monto}</td>
+                    <td class="text-center">${detallePrestamo.estado}</td>
+                    <td class="text-center"><i class="fa-solid fa-money-bill-1 fa-lg me-3 btnPagar"
+                                               style="color: #1ad59d;"></i>
+                    </td>
+                </tr>
+            `;
+                            });
+                            accordionItem += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `;
+                            $('#accordionFlushExample').append(accordionItem);
+                            $('.accordion-item:first-child .accordion-collapse').addClass('show');
+                        }
+                    });
+                });
+
+            });
+
+            $(document).on('click', '.btnPagar', function () {
+                var idDetalle = $(this).closest('tr').find('td:first').next().text();
+                console.log('Hiciste clic en el icono con ID de detalle: ' + idDetalle);
+                $.get('/prestamista/registrarPago?idDetalle=' + idDetalle, function (res) {
+                    window.location.reload()
+                });
+
+            });
+
+
+            /* Eliminar */
+            $('#myTable tbody').on('click', 'tr td i.fa-trash', function () {
+                var codigo = $(this).closest('tr').find('td:first').text();
+                var nombre = $(this).closest('tr').find('td:first').next().next().text();
+
+                alertify.confirm('¿Está seguro de eliminar el trabajador "' + nombre + '"?',
+                    function () { // Confirmado
+                        //window.location.reload()
+                        $.get('/prestamista/eliminarPorId?idEliminar=' + codigo, function (res) {
+                            $('#trabajadores').show();
+                            window.location.reload()
+                        });
+                        //window.location.reload()
+
+                    },
+                    function () { // Cancelado
+                        alertify.error('Cancelado!');
+                    }
+                ).set('labels', { ok: 'Si', cancel: 'No' }).show();
+
+
+            });
+
+            function validarCorreo(correo) {
+                return new Promise(function (resolve) {
+                    if (correo === '') {
+                        $('#correo').addClass("is-invalid");
+                    }
+                    $.get('/prestamista/validarCorreo?correo=' + correo, function (res) {
+                        if (res != 0) {
+                            $('#correo').after('<div class="invalid-feedback">Este correo ya existe</div>');
+                            $('#correo').addClass("is-invalid");
+                            resolve(false); // Correo no válido
+                        } else {
+                            if (correo !== '') {
+                                var regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                if (!regexCorreo.test(correo)) {
+                                    $('#correo').addClass("is-invalid");
+                                } else {
+                                    $('#correo .invalid-feedback').remove();
+                                    $('#correo').removeClass("is-invalid");
+                                }
+                            }
+                            resolve(true); // Correo válido
+                        }
+                    });
+                });
+            }
+
+            function validarUsuario(usuario) {
+                return new Promise(function (resolve) {
+                    if (usuario === '') {
+                        $('#usuario').addClass("is-invalid");
+                    }
+                    $.get('/prestamista/validarUsuario?usuario=' + usuario, function (res) {
+                        if (res != 0) {
+                            $('#usuario').after('<div class="invalid-feedback">Este usuario ya existe</div>');
+                            $('#usuario').addClass("is-invalid");
+                            resolve(false); // Correo no válido
+                        } else {
+                            if (usuario !== '') {
+                                $('#usuario .invalid-feedback').remove();
+                                $('#usuario').removeClass("is-invalid");
+                            }
+                            resolve(true); // Correo válido
+                        }
+                    });
+                });
+            }
+            function validarDni(dni) {
+                if (dni === '') {
+                    $('#dni').addClass("is-invalid");
+                }
+                return new Promise(function (resolve) {
+                    $.get('/prestamista/validarDni?dni=' + dni, function (res) {
+                        if (res != 0) {
+
+                            $('#dni').after('<div class="invalid-feedback">Este dni ya existe</div>');
+                            $('#dni').addClass("is-invalid");
+                            resolve(false); // Correo no válido
+                        } else {
+                            if (dni !== '') {
+                                $('#dni .invalid-feedback').remove();
+                                $('#dni').removeClass("is-invalid");
+                            }
+                            resolve(true); // Correo válido
+                        }
+                    });
+                });
+            }
+            function validarTelefono(telefono) {
+                if (telefono === '') {
+                    $('#telefono').addClass("is-invalid");
+                }
+                return new Promise(function (resolve) {
+                    $.get('/prestamista/validarTelefono?telefono=' + telefono, function (res) {
+                        if (res != 0) {
+
+                            $('#telefono').after('<div class="invalid-feedback">Este telefono ya existe</div>');
+                            $('#telefono').addClass("is-invalid");
+                            resolve(false); // Correo no válido
+                        } else {
+                            if (telefono !== '') {
+                                $('#telefono .invalid-feedback').remove();
+                                $('#telefono').removeClass("is-invalid");
+                            }
+                            resolve(true); // Correo válido
+                        }
+                    });
+                });
+            }
+            function validarModalidad() {
+                let valido;
+                let modalidad = $('#idModalidad').val();
+                if (modalidad == null) {
+                    valido = false;
+                    if ($('#idModalidad').next('.invalid-feedback').length === 0) {
+                        $('#idModalidad').addClass("is-invalid");
+                        $('#idModalidad').after('<div class="invalid-feedback">Seleccione una modalidad de pago</div>');
+                    }
+                } else {
+                    valido = true;
+                    $('#idModalidad').removeClass("is-invalid");
+                    $('#idModalidad').next('.invalid-feedback').remove();
+                }
+                return valido;
+            }
+
+
+            function obtenerUsuarioActual(codigo) {
+                return new Promise((resolve, reject) => {
+                    $.get('/prestamista/buscarPorId?idPrestatario=' + codigo, function (res) {
+                        resolve({
+                            usuario: res.usuario.usuario,
+                            correo: res.usuario.correo,
+                            dni: res.usuario.dni,
+                            telefono: res.usuario.telefono
+
+                        });
+                    }).fail(function (error) {
+                        reject(error);
+                    });
+                });
+            }
+
+            function colorearFilas() {
+                // Agregar la clase table-custom a la tabla
+                $('#tablaPrestatarios').addClass('table-custom');
+
+                $('#tablaPrestatarios tbody tr').each(function () {
+                    var estado = $(this).find('td:eq(5)').text().trim();
+                    if (estado === 'pendiente') {
+                        $(this).addClass('pendiente');
+                    }
+                    if (estado === 'rechazado') {
+                        $(this).addClass('rechazado');
+                    }
+                    if (estado === 'aprobado') {
+                        $(this).addClass('aprobado');
+                    }
+                });
+            }
+
+
+
+            function resetForm() {
+                $('#prestamista')[0].reset();
+                $('#prestamista .invalid-feedback').remove();
+                $('#prestamista .is-invalid').each(function () {
+                    $(this).removeClass("is-invalid");
+                });
+            };
+
+            /* Pasar codigo */
+            function formatearFecha(fecha) {
+                let fechaFormateada = new Date(fecha);
+                let dia = fechaFormateada.getDate().toString().padStart(2, '0');
+                let mes = (fechaFormateada.getMonth() + 1).toString().padStart(2, '0');
+                let anio = fechaFormateada.getFullYear();
+                return `${dia}-${mes}-${anio}`;
+            }
+        </script>
+
+</body>
+<style>
+    body,
+    html {
+        height: 99.5%;
+    }
+
+    select option:disabled {
+        color: red !important;
+    }
+
+    .fila {
+        display: flex;
+        /* Usa flexbox */
+    }
+
+    .contenedor {
+        position: relative;
+        height: 99%;
+        width: 100%;
+    }
+
+    .container-sidenav {
+        padding: 20px 0px;
+        height: 95%;
+        width: 320px;
+        border-radius: 25px;
+        border: none;
+        /* Asegura que el drawer tenga el 100% de la altura */
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    }
+
+    .sidenav {
+        width: 100%;
+        height: 93vh;
+        /* Usando la unidad de la ventana gráfica (viewport height) */
+        /* display: flex; */
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    li {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        padding: 10px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        cursor: pointer;
+    }
+
+    li::before {
+        border-style: none;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(to right,
+                #a1f8d9,
+                #b2fae0,
+                #c2fce8,
+                #d2fdee,
+                #e2fff5);
+        z-index: -1;
+        transition: transform 0.2s ease;
+        transform: translateX(-100%);
+    }
+
+    li:hover::before {
+        transform: translateX(0);
+    }
+
+    i {
+        cursor: pointer;
+    }
+
+    .is-invalid {
+        border-color: #dc3545;
+        padding-right: calc(1.5em + 0.75rem);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    }
+
+    .is-invalid:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+
+    .table {
+        --bs-table-bg: #fff0;
+    }
+
+    .table-custom .pendiente {
+        background-color: #f7f3ec;
+    }
+
+    .table-custom .rechazado {
+        background-color: #ffeeee;
+    }
+
+    .table-custom .aprobado {
+        background-color: #f6ffeb;
+    }
+</style>
+
+</html>

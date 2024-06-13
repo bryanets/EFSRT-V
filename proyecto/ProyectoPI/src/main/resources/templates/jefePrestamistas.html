@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{plantilla/UITemplate :: cabecera}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Usuarios</title>
+</head>
+
+<body>
+
+    <!-- Sidev -->
+    <div class="contenedor">
+        <div class="fila d-flex justify-content-start ">
+            <div class="col-3 mt-2 ms-2">
+                <div class="container-sidenav">
+                    <div class="sidenav">
+                        <div class="text-center mb-5">
+                            <p class="mb-1 h5" th:text="${session.NOMBRE}"></p>
+                            <p class="mb-0" th:text="${session.USU.rol.descripcion}"></p>
+                            <p class="mb-0" th:text="${session.USU.jefePrestamista.grupo.descripcion}"></p>
+                            <form method="post" th:action="@{/logout}">
+                                <input class="btn btn-danger btn-sm mt-3" type="submit" id="cerrarsesion"
+                                    value="Cerrar sesión">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 m-4 d-flex align-items-start flex-column" id="miDiv">
+                <!-- Parte de la tabla -->
+                <button class="btn btn-primary my-3" onclick="abrirModal()">Nuevo
+                    Prestamista</button>
+                <div class="col-12">
+                    <table class="table table-hover" id="myTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Teléfono</th>
+                                <th scope="col">Correo</th>
+                                <th scope="col">Local</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="data:${lista}">
+                                <td th:text="${data.idPrestamista}"></td>
+                                <td th:text="${data.usuario.nombres}"></td>
+                                <td th:text="${data.usuario.telefono}"></td>
+                                <td th:text="${data.usuario.correo}"></td>
+                                <td th:text="${data.localComercial.descripcion}"></td>
+                                <!-- <td th:text="${data.localComercial.descripcion}"></td> -->
+                                <!-- Botón para abrir el modal con datos -->
+                                <td class="text-center">
+                                    <i class="fa-solid fa-pen-to-square fa-lg me-3" style="color: #74C0FC;"
+                                        onclick="abrirModalEditar(this)"
+                                        th:attr="data-id=${data.idPrestamista}, data-direccion=${data.usuario.direccion}, data-dni=${data.usuario.dni}, data-usuario=${data.usuario.usuario}, data-nombres=${data.usuario.nombres}, data-apellidos=${data.usuario.apellidos}, data-correo=${data.usuario.correo}, data-telefono=${data.usuario.telefono}, data-local=${data.localComercial.idLocalComercial}"></i>
+                                    <!-- Botón para eliminar con confirmación -->
+                                    <i class="fa-solid fa-trash fa-lg ms-2" style="color: #ff0000;"
+                                        onclick="confirmarEliminar(this)" th:attr="data-id=${data.idPrestamista}"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal para editar y agregar -->
+    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Gestion Prestamistas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Aquí se cargarán los datos dinámicamente -->
+                <div class="modal-body">
+                    <form th:action="@{/jefe/guardar}" method="post">
+                        <input type="hidden" value="0" name="codigo" id="codigo">
+                        <div class="mb-3">
+                            <label for="nombres" class="form-label">Nombres</label>
+                            <input type="text" class="form-control" id="nombres" name="nombres">
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellidos" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="apellidos" name="apellidos">
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="usuario" name="usuario">
+                        </div>
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="dni" name="dni" oninput="validatedni(this)"
+                                maxlength="8">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono"
+                                oninput="validatetelf(this)" maxlength="9">
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Direccion</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion">
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo</label>
+                            <input type="email" class="form-control" id="correo" name="correo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="local" class="form-label">Local</label>
+                            <select class="form-select" id="local" name="local">
+                                <option th:each="local : ${locales}" th:text="${local.descripcion}"
+                                    th:value="${local.idLocalComercial}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template -->
+    <div th:insert="plantilla/UITemplate :: javascript"></div>
+
+    <!-- Script para abrir el modal de edición -->
+    <script>
+        function abrirModalEditar(elemento) {
+            var id = $(elemento).data('id');
+            var nombres = $(elemento).data('nombres');
+            var apellidos = $(elemento).data('apellidos');
+            var correo = $(elemento).data('correo');
+            var telefono = $(elemento).data('telefono');
+            var usuario = $(elemento).data('usuario');
+            var direccion = $(elemento).data('direccion');
+            var dni = $(elemento).data('dni');
+            var local = $(elemento).data('local');
+
+            $('#codigo').val(id);
+            $('#nombres').val(nombres);
+            $('#apellidos').val(apellidos);
+            $('#correo').val(correo);
+            $('#telefono').val(telefono);
+            $('#direccion').val(direccion);
+            $('#usuario').val(usuario);
+            $('#dni').val(dni);
+            $('#local').value = local;
+
+            $('#editarModal').modal('show');
+        }
+
+        function abrirModal() {
+            $('#codigo').val('0');
+            $('#nombres').val('');
+            $('#apellidos').val('');
+            $('#correo').val('');
+            $('#telefono').val('');
+            $('#direccion').val('');
+            $('#usuario').val('');
+            $('#dni').val('');
+            $('#local').value = 1;
+
+            $('#editarModal').modal('show');
+        }
+    </script>
+
+    <!-- Script para confirmar la eliminación -->
+    <script>
+        function confirmarEliminar(elemento) {
+            var id = $(elemento).data('id');
+            if (confirm("¿Estás seguro de que quieres eliminar este elemento?")) {
+                window.location.href = "/jefe/eliminarPorId?idEliminar=" + id;
+            }
+        }
+    </script>
+    <script>
+        function validatedni(input) {
+            // Remover cualquier carácter que no sea un número
+            input.value = input.value.replace(/\D/g, '');
+            // Limitar la longitud del campo de entrada a 8 caracteres
+            if (input.value.length > 8) {
+                input.value = input.value.slice(0, 8);
+            }
+        }
+        function validatetelf(input) {
+            // Remover cualquier carácter que no sea un número
+            input.value = input.value.replace(/\D/g, '');
+            // Limitar la longitud del campo de entrada a 8 caracteres
+            if (input.value.length > 8) {
+                input.value = input.value.slice(0, 9);
+            }
+        }
+    </script>
+
+</body>
+<style>
+    body,
+    html {
+        height: 99.5%;
+    }
+
+    select option:disabled {
+        color: red !important;
+    }
+
+    .fila {
+        display: flex;
+        width: 100%;
+        /* Usa flexbox */
+    }
+
+    .contenedor {
+        position: relative;
+        height: 99%;
+        width: 100%;
+    }
+
+    .container-sidenav {
+        padding: 20px 0px;
+        height: 95%;
+        width: 320px;
+        border-radius: 25px;
+        border: none;
+        /* Asegura que el drawer tenga el 100% de la altura */
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    }
+
+    .sidenav {
+        width: 100%;
+        height: 93vh;
+        /* Usando la unidad de la ventana gráfica (viewport height) */
+        /* display: flex; */
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    li {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        padding: 10px;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        cursor: pointer;
+    }
+
+    li::before {
+        border-style: none;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(to right,
+                #a1f8d9,
+                #b2fae0,
+                #c2fce8,
+                #d2fdee,
+                #e2fff5);
+        z-index: -1;
+        transition: transform 0.2s ease;
+        transform: translateX(-100%);
+    }
+
+    li:hover::before {
+        transform: translateX(0);
+    }
+
+    i {
+        cursor: pointer;
+    }
+
+    .is-invalid {
+        border-color: #dc3545;
+        padding-right: calc(1.5em + 0.75rem);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    }
+
+    .is-invalid:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+
+    .table {
+        --bs-table-bg: #fff0;
+    }
+
+    .table-custom .pendiente {
+        background-color: #f7f3ec;
+    }
+
+    .table-custom .rechazado {
+        background-color: #ffeeee;
+    }
+
+    .table-custom .aprobado {
+        background-color: #f6ffeb;
+    }
+</style>
+
+</html>

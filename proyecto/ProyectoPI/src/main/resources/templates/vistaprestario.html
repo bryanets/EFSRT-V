@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: rgb(5, 15, 22);
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .login-container {
+            background: rgb(112, 119, 186, 0);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+        }
+
+        .login-container input {
+            width: 80%;
+            color: white;
+            padding: 20px;
+            margin: 10px 0;
+            background-color: rgb(34, 57, 77);
+            border: none;
+            border-radius: 5px;
+        }
+
+        .login-container button {
+            background-color: rgb(9, 72, 157);
+            color: white;
+            font-size: 20px;
+            width: 91%;
+            padding: 20px 30px;
+            border: none;
+            margin-top: 21px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-container button:active {
+            background-color: rgb(3, 28, 61);
+        }
+
+        input:focus {
+            border: 1px solid rgb(195, 195, 195, 0.7);
+            outline: none;
+        }
+
+        input::placeholder {
+            color: rgb(195, 195, 195, 0.85);
+        }
+
+        .alert-danger {
+            margin-left: 5%;
+            padding: 10px;
+            border: 2px solid rgb(198, 9, 9);
+            color: rgb(198, 9, 9);
+            background-color: rgb(237, 112, 112, 0.3);
+            width: 84%;
+        }
+
+        .alert-success {
+            margin-left: 5%;
+            padding: 10px;
+            border: 2px solid rgb(80, 203, 27);
+            color: rgb(80, 203, 27);
+            background-color: rgb(155, 237, 120, 0.3);
+            width: 84%;
+        }
+
+        th {
+            min-width: 80px;
+            color: rgb(3, 0, 51);
+            background-color: rgb(255, 255, 255);
+            border: 2px solid rgb(164, 187, 242);
+            text-align: center;
+        }
+
+        #mytable th,
+        td {
+            padding: 8px 5px;
+            border: 2px solid rgb(164, 187, 242);
+            border-radius: 2px;
+            background-color: rgb(24, 73, 105);
+            color: rgb(188, 216, 216);
+            text-align: center;
+        }
+
+        td:hover {
+            background-color: rgb(129, 187, 226);
+            color: rgb(55, 96, 96);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container" style="margin-top: 220px;">
+        <span class="text-white inicial" th:text="${session.INICIAL}" style="max-width: 200px;user-select: none;font-size: 100px;margin-top:-160px;margin-left: -80px;position: absolute;border:2px solid ; 
+		border-color:rgb(211, 18, 158);border-radius: 50%;padding: 5px 45px;background-color:rgb(68, 6, 51) ;"></span>
+        <h2 class="text-white" th:text="${session.NOMBRE}"></h2>
+        <table class="table" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col">.</th>
+                    <th scope="col">150</th>
+                    <th scope="col">200</th>
+                    <th scope="col">300</th>
+                    <th scope="col">400</th>
+                    <th scope="col">500</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="col">15 dias</th>
+                    <td th:each="data:${listamod}" th:text="${data.montoInteres}" th:if="${data.dias==15}"
+                        onclick="abrirModal(this)"
+                        th:attr="data-id=${data.idMonto}, data-dias=${data.dias}, data-monto=${data.montoInteres}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">20 dias</th>
+                    <td th:each="data:${listamod}" th:text="${data.montoInteres}" th:if="${data.dias==20}"
+                        onclick="abrirModal(this)"
+                        th:attr="data-id=${data.idMonto}, data-dias=${data.dias}, data-monto=${data.montoInteres}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">25 dias</th>
+                    <td th:each="data:${listamod}" th:text="${data.montoInteres}" th:if="${data.dias==25}"
+                        onclick="abrirModal(this)"
+                        th:attr="data-id=${data.idMonto}, data-dias=${data.dias}, data-monto=${data.montoInteres}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">30 dias</th>
+                    <td th:each="data:${listamod}" th:text="${data.montoInteres}" th:if="${data.dias==30}"
+                        onclick="abrirModal(this)"
+                        th:attr="data-id=${data.idMonto}, data-dias=${data.dias}, data-monto=${data.montoInteres}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">35 dias</th>
+                    <td th:each="data:${listamod}" th:text="${data.montoInteres}" th:if="${data.dias==35}"
+                        onclick="abrirModal(this)"
+                        th:attr="data-id=${data.idMonto}, data-dias=${data.dias}, data-monto=${data.montoInteres}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <form method="post" th:action="@{/logout}">
+            <input type="submit" id="cerrarsesion" value="Cerrar sesión">
+        </form>
+        <button type="submit" class="btn btn-primary" onclick="abrirhistorial(this)" id="historial">Historial</button>
+    </div>
+    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Aquí se cargarán los datos dinámicamente -->
+                <div class="modal-body">
+                    <form th:action="@{/prestatario/guardar}" method="post">
+                        <input type="hidden" value="0" name="codigo" id="codigo">
+                        <div class="mb-3">
+                            <label for="nombres" class="form-label">Monto</label>
+                            <input type="text" readonly class="form-control" id="monto" name="monto">
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellidos" class="form-label">Fecha inicio</label>
+                            <input type="date" readonly class="form-control" id="fechai" name="fechai">
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario" class="form-label">Fecha final</label>
+                            <input type="date" readonly class="form-control" id="fechaf" name="fechaf">
+                        </div>
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">Dias</label>
+                            <input type="text" readonly class="form-control" id="dias" name="dias">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Pago Diario</label>
+                            <input type="text" readonly class="form-control" id="pago" name="pago">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="historialmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover" id="myTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Fecha Inicio</th>
+                                <th scope="col">Fecha Fin</th>
+                                <th scope="col">Cuotas</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="data:${lista}">
+                                <td th:text="${data.idPrestamo}"></td>
+                                <td th:text="${data.fechai}"></td>
+                                <td th:text="${data.fechaf}"></td>
+                                <td th:text="${data.cuotas}"></td>
+                                <td th:text="${data.estado}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function abrirModal(elemento) {
+            var id = $(elemento).data('id');
+            var dias = $(elemento).data('dias');
+            var monto = $(elemento).data('monto');
+
+            $('#codigo').val(id);
+            $('#monto').val(monto);
+            $('#dias').val(dias);
+
+            var fechaActual = new Date();
+
+            $('#fechai').val(fechaActual.toISOString().slice(0, 10));
+
+            fechaActual.setDate(fechaActual.getDate() + parseInt(dias));
+            var fechaNueva = fechaActual.toISOString().slice(0, 10);
+
+            $('#fechaf').val(fechaNueva);
+
+            var fechai = new Date($('#fechai').val());
+            var fechaf = new Date($('#fechaf').val());
+
+            var finesDeSemana = 0;
+
+            var fechaActual = new Date(fechai);
+
+            while (fechaActual <= fechaf) {
+                if (fechaActual.getDay() === 6 || fechaActual.getDay() === 0) {
+                    finesDeSemana++;
+                }
+                fechaActual.setDate(fechaActual.getDate() + 1);
+            }
+
+            $('#pago').val((monto / (parseInt(dias) - finesDeSemana)).toFixed(2));
+
+            $('#editarModal').modal('show');
+        }
+
+        function abrirhistorial() {
+            $('#historialmodal').modal('show');
+        }
+    </script>
+</body>
+
+</html>

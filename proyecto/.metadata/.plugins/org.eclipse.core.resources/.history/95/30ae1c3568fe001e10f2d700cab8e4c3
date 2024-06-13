@@ -1,0 +1,32 @@
+package com.gestion.prestamo.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Entity
+@Table(name = "jefeprestamista")
+public class JefePrestamista {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idjefeprestamista")
+    private Integer idJefePrestamista;
+
+    @ManyToOne
+    @JoinColumn(name = "idinversionista")
+    private Inversionista inversionista;
+
+    @OneToOne
+    @JoinColumn(name = "idusuario")
+    private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "idgrupo")
+    private Grupo grupo;
+
+    // Getters y setters
+}
